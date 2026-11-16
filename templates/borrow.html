@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Borrow Book</h2>
+<p>Book: <b>{{ book.title }}</b> by {{ book.author }}</p>
+<form method="POST">
+    <label>Member Name:</label><br>
+    <input type="text" name="member_name" placeholder="Enter your name" required><br><br>
+    <button type="submit">Borrow Now</button>
+</form>
+<a href="/books"><button>Back to Book List</button></a>
+{% endblock %}

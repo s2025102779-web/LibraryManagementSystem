@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Borrowed Books</h2>
+{% for loan in loans %}
+<div class="card">
+    <b>{{ loan.book_title }}</b> - Borrowed by {{ loan.member_name }}
+    <br>Status: <b>{{ loan.status }}</b>
+    {% if loan.status == "Borrowed" %}
+    <a href="/return/{{ loan.id }}"><button>Return</button></a>
+    {% endif %}
+</div>
+{% else %}
+<p>No loans yet.</p>
+{% endfor %}
+{% endblock %}
