@@ -1,31 +1,33 @@
-from config import get_db_connection
-from datetime import date
+loans = []
+loan_id_counter = 1
 
-class Loan:
-    @staticmethod
-    def borrow_book(book_id, member_id):
-        conn = get_db_connection()
-        if not conn:
-            return False
-        cursor = conn.cursor()
-        try:
-            # 1. I-insert ang loan record
-            borrow_date = date.today()
-            cursor.execute(
-                "INSERT INTO loan (book_id, member_id, borrow_date, status) VALUES (%s, %s, %s, 'Borrowed')",
-                (book_id, member_id, borrow_date)
-            )
-            # 2. Baguhin ang status ng libro patungong 'Borrowed'
-            cursor.execute(
-                "UPDATE book SET status = 'Borrowed' WHERE book_id = %s",
-                (book_id,)
-            )
-            conn.commit()
+def borrow_book(book_id, member_name):
+    global loan_id_counter
+    for loan in loans:
+        if loan["book_id"] == book_id and loan["status"] == "Borrowed":
+            return None
+    new_loan = {
+        "id": loan_id_counter,
+        "book_id": book_id,
+        "member_name": member_name,
+        "status": "Borrowed"
+    }
+    loans.append(new_loan)
+    loan_id_counter += 1
+    return new_loan
+
+def return_book(loan_id):
+    for loan in loans:
+        if loan["id"] == loan_id:
+            loan["status"] = "Returned"
+            return loan
+    return None
+
+def get_all_loans():
+    return loans
+
+def is_book_borrowed(book_id):
+    for loan in loans:
+        if loan["book_id"] == book_id and loan["status"] == "Borrowed":
             return True
-        except Exception as e:
-            conn.rollback()
-            print(f"Error borrowing book: {e}")
-            return False
-        finally:
-            cursor.close()
-            conn.close()
+    return False
