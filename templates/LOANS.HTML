@@ -6,7 +6,7 @@
     <b>{{ loan.book_title }}</b> - Borrowed by {{ loan.member_name }}
     <br>Status: <b>{{ loan.status }}</b>
     {% if loan.status == "Borrowed" %}
-    <a href="/return/{{ loan.id }}"><button>Return</button></a>
+    <a href="/return/{{ loan.loan_id }}"></a><button>Return</button></a>
     {% endif %}
 </div>
 {% else %}

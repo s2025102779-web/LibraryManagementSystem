@@ -8,6 +8,7 @@ class Loan:
     @staticmethod
     def borrow_book(book_id, member_id):
         conn = get_db_connection()
+
         if not conn:
             return False
 
@@ -52,6 +53,7 @@ class Loan:
     @staticmethod
     def return_book(loan_id):
         conn = get_db_connection()
+
         if not conn:
             return False
 
@@ -101,6 +103,7 @@ class Loan:
     @staticmethod
     def get_all_loans():
         conn = get_db_connection()
+
         if not conn:
             return []
 
@@ -122,6 +125,7 @@ class Loan:
                 LEFT JOIN member m ON l.member_id = m.member_id
                 ORDER BY l.loan_id DESC
             """)
+
             return cursor.fetchall()
 
         except Exception as e:
@@ -135,6 +139,7 @@ class Loan:
     @staticmethod
     def is_book_borrowed(book_id):
         conn = get_db_connection()
+
         if not conn:
             return False
 
@@ -148,6 +153,7 @@ class Loan:
                 """,
                 (book_id,)
             )
+
             return cursor.fetchone()[0] > 0
 
         except Exception as e:

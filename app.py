@@ -1,7 +1,7 @@
+
 import sys
 import os
 
-# Ayusin ang path para mabasa ang models folder
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from flask import Flask, render_template, request, redirect, url_for, flash
@@ -48,8 +48,24 @@ def index():
 # VIEW BOOKS
 @app.route('/books')
 def books():
-    books = Book.get_all_books()
-    return render_template('books.html', books=books)
+    all_books = Book.get_all_books()
+    search = request.args.get('search', '').strip()
+
+    if search:
+        books = [
+            book for book in all_books
+            if search.lower() in book['title'].lower()
+            or search.lower() in book['author'].lower()
+            or search.lower() in str(book['isbn']).lower()
+        ]
+    else:
+        books = all_books
+
+    return render_template(
+        'books.html',
+        books=books,
+        search=search
+    )
 
 
 # ADD BOOK
@@ -65,8 +81,8 @@ def add_book():
         if success:
             flash("Book is successfully added!", "success")
             return redirect(url_for('index'))
-        else:
-            flash("An error occurred while adding the book.", "danger")
+
+        flash("An error occurred while adding the book.", "danger")
 
     return render_template('add_book.html')
 
@@ -84,8 +100,8 @@ def add_member():
         if success:
             flash("Member is successfully added!", "success")
             return redirect(url_for('index'))
-        else:
-            flash("An error occurred while adding the member.", "danger")
+
+        flash("An error occurred while adding the member.", "danger")
 
     return render_template('add_member.html')
 
@@ -107,6 +123,26 @@ def borrow_book():
         flash("Please select a book and a member.", "danger")
 
     return redirect(url_for('index'))
+
+
+# VIEW BORROWED BOOKS
+@app.route('/loans')
+def loans():
+    all_loans = Loan.get_all_loans()
+    return render_template('LOANS.HTML', loans=all_loans)
+
+
+# RETURN BOOK
+@app.route('/return/<int:loan_id>')
+def return_book(loan_id):
+    success = Loan.return_book(loan_id)
+
+    if success:
+        flash("Book successfully returned!", "success")
+    else:
+        flash("Unable to return this book.", "danger")
+
+    return redirect(url_for('loans'))
 
 
 if __name__ == '__main__':
