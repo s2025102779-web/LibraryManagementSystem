@@ -1,32 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Library System</title>
+  <title>Library</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial; margin: 0; padding: 0; background: #f4f6f8; }
-    nav { background: #0f3b4d; padding: 15px; }
-    nav a { color: white; margin-right: 20px; text-decoration: none; font-weight: bold; }
-    .container { padding: 20px; background: white; margin: 20px; border-radius: 8px; }
-    button, input[type="submit"] { background: #00a8e8; color: white; border: none; padding: 8px 15px; cursor: pointer; }
-    input[type="text"] { padding: 8px; width: 250px; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',Arial,sans-serif;background:#f3efe9;color:#2b2b2b}
+    nav{background:#463627;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;box-shadow:0 2px 15px rgba(0,0,0,.2)}
+    .logo{color:white;font-family:'Playfair Display',serif;font-size:22px;text-decoration:none}
+    .logo b{color:#e8c87a}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{color:#e8e8e8;text-decoration:none;padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600}
+    .nav-links a:hover{background:#4d372a;color:white}
+    .hero{background-image:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1400&q=80');background-size:cover;background-position:center;height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:20px}
+    .hero h1{font-family:'Playfair Display',serif;font-size:42px;line-height:1.1}
+    .hero p{margin-top:10px;opacity:.9;font-size:16px}
+    .hero-search{margin-top:18px;background:white;border-radius:999px;padding:6px 6px 6px 18px;display:flex;width:100%;max-width:480px}
+    .hero-search input{border:none;outline:none;flex:1;font-size:15px}
+    .hero-search button{background:#503b23;color:white;border:none;padding:10px 22px;border-radius:999px;font-weight:700;cursor:pointer}
+    .container{max-width:1100px;margin:-30px auto 20px auto;background:white;padding:28px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.08);position:relative}
+    @media(max-width:600px){.hero h1{font-size:28px}.nav-links a{padding:8px 10px;font-size:12px}.container{margin:-20px 12px 20px 12px;padding:18px}}
   </style>
 </head>
 <body>
   <nav>
-    <a href="/">Dashboard</a>
-    <a href="/books">Book List</a>
-    <a href="/add_book">Add Book</a>
-    <a href="/loans">Borrowed Books</a>
+    <a href="/" class="logo">📚 Silid<b> Aklatan</b></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/books">Browse Books</a>
+      <a href="/add_book">+ Add Book</a>
+      <a href="/loans">My Borrowed</a>
+    </div>
   </nav>
+
+  <div class="hero">
+    <h1>Find Your Next Great Read</h1>
+    <p>Over 3,000 books • Open Mon - Sat • Faith, Colleges</p>
+    <form class="hero-search" method="get" action="/books">
+      <input type="text" name="q" placeholder="Search title, author, ISBN...">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
   <div class="container">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        {% for m in messages %}
-          <p style="background:#d4edda; padding:10px;">{{ m }}</p>
-        {% endfor %}
+        {% for m in messages %}<p style="background:#e8f5e9;padding:12px;border-radius:10px;margin-bottom:15px;">✅ {{ m }}</p>{% endfor %}
       {% endif %}
     {% endwith %}
     {% block content %}{% endblock %}
   </div>
+  <p style="text-align:center;color:#999;padding:10px 0 30px 0;font-size:13px;">Calamba City Library • Made for School Project • Open 8AM - 5PM</p>
 </body>
 </html>
