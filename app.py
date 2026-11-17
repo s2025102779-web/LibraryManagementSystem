@@ -1,97 +1,113 @@
-from flask import Flask, render_template, request, redirect, flash
-from loan import borrow_book, return_book, get_all_loans, is_book_borrowed
+import sys
+import os
+
+# Ayusin ang path para mabasa ang models folder
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from flask import Flask, render_template, request, redirect, url_for, flash
+from models.book import Book
+from member import Member
+from loan import Loan
 
 app = Flask(__name__)
-app.secret_key = "library-secret"
+app.secret_key = "library_secret_key"
 
-books = [
-    {"id": 1, "title": "Noli Me Tangere", "author": "Jose Rizal"},
-    {"id": 2, "title": "El Filibusterismo", "author": "Jose Rizal"},
-    {"id": 3, "title": "Harry Potter", "author": "J.K. Rowling"},
-]
 
-@app.route("/")
-def dashboard():
-    return render_template("dashboard.html", total_books=len(books))
+# DASHBOARD
+@app.route('/')
+def index():
+    books = Book.get_all_books()
+    members = Member.get_all_members()
+    loans = Loan.get_all_loans()
 
-@app.route("/books")
-def book_list():
-    q = request.args.get("q", "").lower()
-    if q:
-        filtered = [b for b in books if q in b["title"].lower() or q in b["author"].lower()]
-    else:
-        filtered = books
-    return render_template("book_list.html", books=filtered, q=q)
+    total_books = len(books)
+    total_members = len(members)
 
-@app.route("/add_book", methods=["GET", "POST"])
+    borrowed_books = sum(
+        1 for loan in loans if loan['status'] == 'Borrowed'
+    )
+
+    available_books = sum(
+        1 for book in books if book['status'] == 'Available'
+    )
+
+    recent_books = books[-5:][::-1]
+    latest_loans = loans[:5]
+
+    return render_template(
+        'dashboard.html',
+        total_books=total_books,
+        total_members=total_members,
+        borrowed_books=borrowed_books,
+        available_books=available_books,
+        recent_books=recent_books,
+        latest_loans=latest_loans
+    )
+
+
+# VIEW BOOKS
+@app.route('/books')
+def books():
+    books = Book.get_all_books()
+    return render_template('books.html', books=books)
+
+
+# ADD BOOK
+@app.route('/add-book', methods=['GET', 'POST'])
 def add_book():
-    if request.method == "POST":
-        title = request.form.get("title")
-        author = request.form.get("author")
-        if not title or not author:
-            flash("Please fill in all fields!")
-            return redirect("/add_book")
-        new_id = max([b["id"] for b in books], default=0) + 1
-        books.append({"id": new_id, "title": title, "author": author})
-        flash("Book added successfully!")
-        return redirect("/books")
-    return render_template("add_book.html")
+    if request.method == 'POST':
+        title = request.form.get('title')
+        author = request.form.get('author')
+        isbn = request.form.get('isbn')
 
-@app.route("/edit/<int:book_id>", methods=["GET", "POST"])
-def edit_book(book_id):
-    book = next((b for b in books if b["id"] == book_id), None)
-    if not book:
-        flash("Book not found!")
-        return redirect("/books")
-    if request.method == "POST":
-        book["title"] = request.form.get("title")
-        book["author"] = request.form.get("author")
-        flash("Book updated successfully!")
-        return redirect("/books")
-    return render_template("edit_book.html", book=book)
+        success = Book.add_book(title, author, isbn)
 
-@app.route("/delete/<int:book_id>")
-def delete_book(book_id):
-    global books
-    books = [b for b in books if b["id"] != book_id]
-    flash("Book deleted!")
-    return redirect("/books")
+        if success:
+            flash("Book is successfully added!", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("An error occurred while adding the book.", "danger")
 
-@app.route("/borrow/<int:book_id>", methods=["GET", "POST"])
-def borrow(book_id):
-    book = next((b for b in books if b["id"] == book_id), None)
-    if not book:
-        flash("Book not found!")
-        return redirect("/books")
-    if is_book_borrowed(book_id):
-        flash("Book is already borrowed!")
-        return redirect("/books")
-    if request.method == "POST":
-        member_name = request.form.get("member_name")
-        if not member_name:
-            flash("Please enter member name!")
-            return redirect(f"/borrow/{book_id}")
-        borrow_book(book_id, member_name)
-        flash(f"Book borrowed by {member_name}!")
-        return redirect("/loans")
-    return render_template("borrow.html", book=book)
+    return render_template('add_book.html')
 
-@app.route("/loans")
-def loan_list():
-    all_loans = get_all_loans()
-    for loan in all_loans:
-        book = next((b for b in books if b["id"] == loan["book_id"]), None)
-        loan["book_title"] = book["title"] if book else "Unknown"
-    return render_template("loans.html", loans=all_loans)
 
-@app.route("/return/<int:loan_id>")
-def return_loan(loan_id):
-    result = return_book(loan_id)
-    if result:
-        flash("Book returned successfully!")
+# ADD MEMBER
+@app.route('/add-member', methods=['GET', 'POST'])
+def add_member():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+
+        success = Member.add_member(name, email, phone)
+
+        if success:
+            flash("Member is successfully added!", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("An error occurred while adding the member.", "danger")
+
+    return render_template('add_member.html')
+
+
+# BORROW BOOK
+@app.route('/borrow', methods=['POST'])
+def borrow_book():
+    book_id = request.form.get('book_id')
+    member_id = request.form.get('member_id')
+
+    if book_id and member_id:
+        success = Loan.borrow_book(int(book_id), int(member_id))
+
+        if success:
+            flash("Book is successfully borrowed!", "success")
+        else:
+            flash("The book could not be borrowed.", "danger")
     else:
-        flash("Loan not found!")
-    return redirect("/loans")
+        flash("Please select a book and a member.", "danger")
 
-if __name__ == "__main__":
+    return redirect(url_for('index'))
+
+
+if __name__ == '__main__':
     app.run(debug=True)

@@ -9,7 +9,7 @@ class Member:
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO member (name, email, phone) VALUES (%s, %s, %s)",
+                "INSERT INTO member (name, email, phone) VALUES (?, ?, ?)"
                 (name, email, phone)
             )
             conn.commit()
