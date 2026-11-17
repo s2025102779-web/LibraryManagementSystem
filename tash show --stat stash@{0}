@@ -1,0 +1,12 @@
+[33mcommit ff564bcb5747133db23479eeec20efac6b4710fc[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Lyndsey <s2025102355@firstasia.edu>
+Date:   Tue Nov 17 11:15:28 2026 +0800
+
+    library design
+
+ app.py                   |  2 [32m+[m[31m-[m
+ templates/add_book.html  | 30 [32m++++++++++++++++[m[31m----[m
+ templates/base.html      | 52 [32m+++++++++++++++++++++++++[m[31m----------[m
+ templates/book_list.html | 68 [32m++++++++++++++++++++++++[m[31m----------------------[m
+ templates/dashboard.html | 71 [32m+++++++++++++++++++++++++++++++++++++++++++++[m[31m---[m
+ 5 files changed, 166 insertions(+), 57 deletions(-)

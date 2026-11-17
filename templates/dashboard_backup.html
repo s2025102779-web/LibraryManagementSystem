@@ -1,0 +1,123 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="hero">
+    <div>
+        <p>WELCOME BACK,</p>
+        <h1>Library Admin 📖</h1>
+
+        <p>
+            Manage your library collection and
+            track borrowed books easily.
+        </p>
+
+        <a href="/books" class="btn">
+            View Book Collection →
+        </a>
+    </div>
+</div>
+
+
+<div class="stat-grid">
+
+    <div class="stat-card blue">
+        <div class="stat-icon">📚</div>
+        <h3>TOTAL BOOKS</h3>
+        <div class="stat-number">{{ total_books }}</div>
+        <p>Registered books in the library</p>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-icon">👥</div>
+        <h3>TOTAL MEMBERS</h3>
+        <div class="stat-number">{{ total_members }}</div>
+        <p>Registered members</p>
+    </div>
+
+    <div class="stat-card orange">
+        <div class="stat-icon">⇄</div>
+        <h3>BORROWED BOOKS</h3>
+        <div class="stat-number">{{ borrowed_books }}</div>
+        <p>Currently borrowed</p>
+    </div>
+
+    <div class="stat-card purple">
+        <div class="stat-icon">📖</div>
+        <h3>AVAILABLE BOOKS</h3>
+        <div class="stat-number">{{ available_books }}</div>
+        <p>Ready for borrowing</p>
+    </div>
+
+</div>
+
+
+<div class="bottom-grid">
+
+    <div class="section-card">
+
+        <h2 class="section-title">
+            📚 Recently Added Books
+        </h2>
+
+        {% for book in recent_books %}
+
+        <div class="book-item">
+            <b>{{ book.title }}</b>
+            <p>{{ book.author }}</p>
+
+            {% if book.isbn %}
+            <img
+                src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                alt="Book cover"
+                style="width:55px;height:75px;object-fit:contain;margin-top:8px;"
+                onerror="this.style.display='none';"
+            >
+            {% endif %}
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <b>No books have been added yet.</b>
+            <p>Start by adding a new book to your library.</p>
+            <br>
+            <a href="/add_book" class="btn">+ Add New Book</a>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="section-card">
+
+        <h2 class="section-title">
+            ⇄ Latest Borrowed Books
+        </h2>
+
+        {% for loan in recent_loans %}
+
+        <div class="book-item">
+            <b>{{ loan.book_title }}</b>
+            <p>Borrowed by: {{ loan.member_name }}</p>
+            <p>Status: {{ loan.status }}</p>
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">📖</div>
+            <b>No books have been borrowed yet.</b>
+            <p>Borrowed books will appear here.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,28 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 style="margin-bottom:20px; font-size:28px;">➕ Add Book</h2>
+<div class="section-card" style="max-width: 600px;">
+    <h2 class="section-title">➕ Add New Book</h2>
 
-<form method="POST" action="/add_book" style="max-width:500px;">
+    <form method="POST" action="{{ url_for('add_book') }}">
+        <div>
+            <label>Title:</label>
+            <input type="text" name="title" placeholder="Ex: Noli Me Tangere" required>
+        </div>
 
-  <div style="margin-bottom:18px;">
-    <label style="display:block; font-weight:bold; margin-bottom:8px;">Title:</label>
-    <input type="text" name="title" placeholder="Ex: Noli Me Tangere" required style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; font-size:15px;">
-  </div>
+        <div>
+            <label>Author:</label>
+            <input type="text" name="author" placeholder="Ex: Jose Rizal" required>
+        </div>
 
-  <div style="margin-bottom:18px;">
-    <label style="display:block; font-weight:bold; margin-bottom:8px;">Author:</label>
-    <input type="text" name="author" placeholder="Ex: Jose Rizal" required style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; font-size:15px;">
-  </div>
+        <div>
+            <label>ISBN:</label>
+            <input type="text" name="isbn" placeholder="Ex: 978-971-07-1234-5" required>
+        </div>
 
-  <div style="margin-bottom:22px;">
-    <label style="display:block; font-weight:bold; margin-bottom:8px;">ISBN:</label>
-    <input type="text" name="isbn" placeholder="Ex: 978-971-07-1234-5" required style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; font-size:15px;">
-  </div>
-
-  <button type="submit" style="background:#2e7d32; color:white; border:none; padding:12px 30px; border-radius:25px; font-weight:bold; font-size:16px; cursor:pointer;">Save Book</button>
-  <a href="/books" style="margin-left:10px; color:#666; text-decoration:none;">Cancel</a>
-
-</form>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button type="submit">Save Book</button>
+            <a href="/books" class="btn" style="background:#e4dcf4; color:#4a386d; text-decoration:none; display:inline-flex; align-items:center;">Cancel</a>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

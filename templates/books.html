@@ -1,32 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Book List</h1>
-<form method="GET" action="/books">
-    <input type="text" name="search" placeholder="Search book..." value="{{ search }}">
-    <button type="submit">Search</button>
-</form>
-<br>
-<table>
-   
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th>Action</th>
-    </tr>
+<div class="section-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <h2 class="section-title" style="margin:0;">Book Collection Records</h2>
+        <form method="GET" action="/books" style="display:flex; gap:8px; margin:0; max-width:350px;">
+            <input type="text" name="search" placeholder="Search book..." value="{{ search }}" style="margin:0;">
+            <button type="submit">Search</button>
+        </form>
+    </div>
 
-    {% for book in books %}
-    <tr>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.isbn }}</td>
-        <td>
-            <a href="/edit/{{ book.book_id }}">
-                <button type="button">Edit</button>
-            </a>
-        </td>
-    </tr>
-    {% endfor %}
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th style="text-align:right;">Action</th>
+        </tr>
 
-</table>
+        {% for book in books %}
+        <tr>
+            <td><b>{{ book.title }}</b></td>
+            <td>{{ book.author }}</td>
+            <td><code style="background:#f1ebfc; padding:4px 8px; border-radius:6px; color:#6a3ab2;">{{ book.isbn }}</code></td>
+            <td style="text-align:right;">
+                <div style="display:inline-flex; gap:8px; align-items:center;">
+                    <a href="/edit/{{ book.book_id }}">
+                        <button type="button" style="padding:6px 14px; font-size:12px;">Edit</button>
+                    </a>
+                    <form method="POST" action="{{ url_for('delete_book', book_id=book.book_id) }}" style="margin:0;" onsubmit="return confirm('Delete book: {{ book.title }}?');">
+                        <button type="submit" style="background: linear-gradient(135deg, #e11d48, #fb7185); padding: 6px 14px; font-size: 12px; box-shadow: none;">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

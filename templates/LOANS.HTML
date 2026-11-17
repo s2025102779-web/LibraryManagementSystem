@@ -1,15 +1,56 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Borrowed Books</h2>
-{% for loan in loans %}
-<div class="card">
-    <b>{{ loan.book_title }}</b> - Borrowed by {{ loan.member_name }}
-    <br>Status: <b>{{ loan.status }}</b>
-    {% if loan.status == "Borrowed" %}
-    <a href="/return/{{ loan.loan_id }}"></a><button>Return</button></a>
-    {% endif %}
+<div class="section-card" style="max-width: 700px;">
+    <h2 class="section-title">⇄ Borrow Management</h2>
+
+    <!-- BORROW BOOK FORM -->
+    <form method="POST" action="{{ url_for('borrow_book') }}" style="background:#faf8fd; padding:20px; border-radius:14px; border:1px solid #eae2f5; margin-bottom:25px;">
+        <h3 style="font-size:15px; margin-bottom:15px; color:#3a225e;">+ Issue New Loan</h3>
+        
+        <label>Select Book:</label>
+        <select name="book_id" required>
+            <option value="">Choose an available book</option>
+            {% for book in available_book_list %}
+            <option value="{{ book.book_id }}">
+                {{ book.title }} - {{ book.author }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Select Member:</label>
+        <select name="member_id" required>
+            <option value="">Choose a registered member</option>
+            {% for member in members %}
+            <option value="{{ member.member_id }}">
+                {{ member.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn" style="margin-top:10px;">
+            Confirm Borrow
+        </button>
+    </form>
+
+    <!-- BORROWED BOOKS LIST -->
+    <h3 class="section-title" style="font-size:17px;">Active Borrowed Books List</h3>
+
+    {% for loan in loans %}
+        {% if loan.status == "Borrowed" %}
+        <div style="background:white; border:1px solid #eae2f5; padding:18px; border-radius:14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <b style="font-size:15px; color:#2c1a4a;">{{ loan.book_title }}</b>
+                <p style="color:#665; font-size:13px; margin:4px 0;">Borrowed by: <b>{{ loan.member_name }}</b></p>
+                <p style="color:#776892; font-size:12px;">Date: {{ loan.borrow_date }} &bull; Status: <span style="color:#b85d1e; font-weight:600;">{{ loan.status }}</span></p>
+            </div>
+            <a href="{{ url_for('return_book', loan_id=loan.loan_id) }}" class="btn" style="background:#b85d1e; padding:8px 16px; font-size:12px;">
+                Return Book
+            </a>
+        </div>
+        {% endif %}
+    {% else %}
+    <p style="color: #776892; text-align:center; padding:20px;">No active loans found.</p>
+    {% endfor %}
 </div>
-{% else %}
-<p>No loans yet.</p>
-{% endfor %}
 {% endblock %}

@@ -1,10 +1,29 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h1>Edit Book</h1>
-<form method="POST">
-    <label>Title:</label><input type="text" name="title" value="{{ book.title }}" required><br>
-    <label>Author:</label><input type="text" name="author" value="{{ book.author }}" required><br>
-    <label>ISBN:</label><input type="text" name="isbn" value="{{ book.isbn }}" required><br>
-    <button type="submit">Update Book</button>
-</form>
+<div class="section-card" style="max-width: 600px;">
+    <h2 class="section-title">✏️ Edit Book Details</h2>
+
+    <form method="POST">
+        <div>
+            <label>Title:</label>
+            <input type="text" name="title" value="{{ book.title }}" required>
+        </div>
+
+        <div>
+            <label>Author:</label>
+            <input type="text" name="author" value="{{ book.author }}" required>
+        </div>
+
+        <div>
+            <label>ISBN:</label>
+            <input type="text" name="isbn" value="{{ book.isbn }}" required>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button type="submit">Update Book</button>
+            <a href="/books" class="btn" style="background:#e4dcf4; color:#4a386d; text-decoration:none; display:inline-flex; align-items:center;">Cancel</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
