@@ -31,7 +31,7 @@ def index():
         1 for book in books if book['status'] == 'Available'
     )
 
-    recent_books = books[-5:][::-1]
+    recent_books = books[:5]
     latest_loans = loans[:5]
 
     return render_template(
@@ -122,7 +122,7 @@ def borrow_book():
     else:
         flash("Please select a book and a member.", "danger")
 
-<<<<<<< HEAD
+    
     return redirect(url_for('index'))
 
 
@@ -147,8 +147,4 @@ def return_book(loan_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-=======
-if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
->>>>>>> origin/main
