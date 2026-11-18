@@ -1,29 +1,71 @@
+
 {% extends "base.html" %}
 
 {% block content %}
-<div class="section-card" style="max-width: 600px;">
-    <h2 class="section-title">👥 Add New Member</h2>
+
+<div class="section-card" style="
+    max-width: 600px;
+    padding: 25px;
+    border-radius: 18px;
+    border-top: 4px solid #8b4dff;
+    background: white;
+">
+
+    <h2 class="section-title" style="margin-bottom: 20px;">
+        👥 Add New Member
+    </h2>
 
     <form method="POST" action="{{ url_for('add_member') }}">
-        <div>
-            <label>Full Name:</label>
-            <input type="text" name="name" placeholder="Enter full name" required>
+
+        <div style="margin-bottom: 18px;">
+            <label style="display:block; margin-bottom:8px; font-weight:600;">
+                Full Name:
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter member's full name"
+                required
+                style="width:100%; box-sizing:border-box;"
+            >
         </div>
 
-        <div>
-            <label>Email Address:</label>
-            <input type="email" name="email" placeholder="Enter email address" required>
+        <div style="margin-bottom: 22px;">
+            <label style="display:block; margin-bottom:8px; font-weight:600;">
+                Email Address:
+            </label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter email address"
+                required
+                style="width:100%; box-sizing:border-box;"
+            >
         </div>
 
-        <div>
-            <label>Phone Number:</label>
-            <input type="text" name="phone" placeholder="Enter phone number" required>
+        <div style="display:flex; gap:10px; align-items:center;">
+
+            <button type="submit">
+                Save Member
+            </button>
+
+            <a href="{{ url_for('index') }}" style="
+                text-decoration:none;
+                padding:12px 22px;
+                border-radius:12px;
+                background:#e9ddfa;
+                color:#49336d;
+                font-weight:600;
+            ">
+                Cancel
+            </a>
+
         </div>
 
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <button type="submit" class="btn">Save Member</button>
-            <a href="{{ url_for('index') }}" class="btn" style="background:#e4dcf4; color:#4a386d; text-decoration:none; display:inline-flex; align-items:center;">Cancel</a>
-        </div>
     </form>
+
 </div>
+
 {% endblock %}

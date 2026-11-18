@@ -1,10 +1,20 @@
+
 {% extends "base.html" %}
+
 {% block content %}
 <div class="section-card">
+
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
         <h2 class="section-title" style="margin:0;">Book Collection Records</h2>
-        <form method="GET" action="/books" style="display:flex; gap:8px; margin:0; max-width:350px;">
-            <input type="text" name="search" placeholder="Search book..." value="{{ search }}" style="margin:0;">
+
+        <form method="GET" action="{{ url_for('books') }}" style="display:flex; gap:8px; margin:0; max-width:350px;">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search book..."
+                value="{{ search|default('') }}"
+                style="margin:0;"
+            >
             <button type="submit">Search</button>
         </form>
     </div>
@@ -21,21 +31,48 @@
         <tr>
             <td><b>{{ book.title }}</b></td>
             <td>{{ book.author }}</td>
-            <td><code style="background:#f1ebfc; padding:4px 8px; border-radius:6px; color:#6a3ab2;">{{ book.isbn }}</code></td>
+
+            <td>
+                <code style="background:#f1ebfc; padding:4px 8px; border-radius:6px; color:#6a3ab2;">
+                    {{ book.isbn }}
+                </code>
+            </td>
+
             <td style="text-align:right;">
                 <div style="display:inline-flex; gap:8px; align-items:center;">
-                    <a href="/edit/{{ book.book_id }}">
-                        <button type="button" style="padding:6px 14px; font-size:12px;">Edit</button>
+
+                    <a href="{{ url_for('edit_book', id=book.id) }}">
+                        <button type="button" style="padding:6px 14px; font-size:12px;">
+                            Edit
+                        </button>
                     </a>
-                    <form method="POST" action="{{ url_for('delete_book', book_id=book.book_id) }}" style="margin:0;" onsubmit="return confirm('Delete book: {{ book.title }}?');">
-                        <button type="submit" style="background: linear-gradient(135deg, #e11d48, #fb7185); padding: 6px 14px; font-size: 12px; box-shadow: none;">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('delete_book', id=book.id) }}"
+                        style="margin:0;"
+                        onsubmit="return confirm('Delete this book?');"
+                    >
+                        <button
+                            type="submit"
+                            style="background:linear-gradient(135deg, #e11d48, #fb7185); padding:6px 14px; font-size:12px; box-shadow:none;"
+                        >
                             Delete
                         </button>
                     </form>
+
                 </div>
             </td>
         </tr>
+
+        {% else %}
+        <tr>
+            <td colspan="4" style="text-align:center; padding:25px;">
+                No books found.
+            </td>
+        </tr>
         {% endfor %}
+
     </table>
 </div>
 {% endblock %}

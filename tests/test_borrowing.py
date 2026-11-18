@@ -7,8 +7,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from app import app
 from models.book import Book
-from models.member import Member
-from models.loan import Loan
+from member import Member
+from loan import Loan
 
 class LibraryTestCase(unittest.TestCase):
     
